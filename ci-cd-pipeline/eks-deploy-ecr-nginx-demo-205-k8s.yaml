@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: nginx-demo-205
+  name: nginx-demo-205
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: nginx-demo-205
+  template:
+    metadata:
+      labels:
+        app: nginx-demo-205
+    spec:
+      containers:
+      - name: nginx-demo-205
+        image: 185592412460.dkr.ecr.ap-southeast-1.amazonaws.com/nginx-demo-205:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8000
+          name: http
+          protocol: TCP
+# service type loadbalancer       
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: nginx-demo-205
+    k8s-app: nginx-demo-205
+  name: nginx-demo-205
+spec:
+  ports:
+  - name: http
+    port: 81
+    protocol: TCP
+    targetPort: 8000
+  type: LoadBalancer
+  selector:
+    app: nginx-demo-205
